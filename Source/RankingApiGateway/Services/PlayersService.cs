@@ -1,4 +1,9 @@
-﻿using RankingApiGateway.Models;
+﻿using RankingApiGateway.Clients;
+using RankingApiGateway.Clients.PlayersApiClient;
+using RankingApiGateway.Clients.PlayersApiClient.Models;
+using RankingApiGateway.Clients.RatingApiClient;
+using RankingApiGateway.Mappers;
+using RankingApiGateway.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,44 +13,52 @@ namespace RankingApiGateway.Services
 {
     public interface IPlayersService
     {
-        IReadOnlyCollection<Player> GetAllPlayers();
-        Player GetPlayerById(Guid id);
-        Player CreatePlayer(CreatePlayerCommand command);
+        Task<IReadOnlyCollection<PlayerModel>> GetAllPlayers();
+        Task<PlayerModel> GetPlayerById(Guid id);
+        Task<PlayerModel> CreatePlayer(CreatePlayerCommand command);
     }
 
     public class PlayersService : IPlayersService
     {
-
         IReadOnlyCollection<Player> players = new List<Player>
         {
-            new Player{ Id = Guid.NewGuid(), Name = "Player 1", Rank = "1" },
-            new Player{ Id = Guid.NewGuid(), Name = "Player 2", Rank = "2" },
+            new Player{ Id = Guid.NewGuid().ToString(), Name = "Player 1", Rating = 1 },
+            new Player{ Id = Guid.NewGuid().ToString(), Name = "Player 2", Rating = 2 },
         };
 
+        private readonly IPlayersApiClient playersApiClient;
+        private readonly IRatingApiClient ratingApiClient;
 
-        public PlayersService()
+        public PlayersService(IPlayersApiClient playersApiClient, IRatingApiClient ratingApiClient)
         {
-           
+            this.playersApiClient = playersApiClient;
+            this.ratingApiClient = ratingApiClient;
         }
 
-        public IReadOnlyCollection<Player> GetAllPlayers()
+        public async Task<IReadOnlyCollection<PlayerModel>> GetAllPlayers()
         {
-            return players;
+            return PlayerMapper.Map(players);
         }
 
-        public Player GetPlayerById(Guid id)
+        public async Task<PlayerModel> GetPlayerById(Guid id)
         {
-            return players.FirstOrDefault();
+            return PlayerMapper.Map(players.FirstOrDefault());
         }
 
-        public Player CreatePlayer(CreatePlayerCommand command)
+        public async Task<PlayerModel> CreatePlayer(CreatePlayerCommand command)
         {
-            return new Player
+            var rating = await ratingApiClient.GetDefaultPlayerRating();
+
+            Player player = new Player
             {
-                Id = Guid.NewGuid(),
-                Name = command.Name,
-                Rank = "-"
+                Name = command.Name
             };
+
+            player.UpdateRating(rating.Rating, rating.Deviation, rating.Volatility);
+
+            Player createdPlayer = await playersApiClient.CreatePlayer(player);
+
+            return PlayerMapper.Map(createdPlayer);
         }
     }
 }

@@ -12,6 +12,9 @@ using RankingApiGateway.Services;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using RankingApiGateway.Clients;
+using RankingApiGateway.Clients.MatchesApiClient;
+using RankingApiGateway.Clients.PlayersApiClient;
+using RankingApiGateway.Clients.RatingApiClient;
 
 namespace RankingApiGateway
 {
@@ -27,9 +30,9 @@ namespace RankingApiGateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            string playersApiUrl = "http://localhost";
-            string matchesApiUrl = "http://localhost";
-            string ratingApiUrl = "http://localhost";
+            string playersApiUrl = $"http://{Environment.GetEnvironmentVariable("POOLRANKING_PLAYERS_SERVICE_HOST")}:{Environment.GetEnvironmentVariable("POOLRANKING_PLAYERS_SERVICE_PORT")}";
+            string matchesApiUrl = $"http://{Environment.GetEnvironmentVariable("POOLRANKING_MATCHES_SERVICE_HOST")}:{Environment.GetEnvironmentVariable("POOLRANKING_MATCHES_SERVICE_PORT")}"; ;
+            string ratingApiUrl = $"http://{Environment.GetEnvironmentVariable("POOLRANKING_RANKING_SERVICE_HOST")}:{Environment.GetEnvironmentVariable("POOLRANKING_RANKING_SERVICE_PORT")}"; ;
 
             services.AddMvc();
 
@@ -38,13 +41,13 @@ namespace RankingApiGateway
             builder.RegisterType<PlayersService>().As<IPlayersService>();
             builder.RegisterType<MatchesService>().As<IMatchesService>();
 
-            //IMatchApiClient matchApiClient = Refit.RestService.For<IMatchApiClient>(matchesApiUrl);
-            //IPlayerApiClient playerApiClient = Refit.RestService.For<IPlayerApiClient>(playersApiUrl);
-            //IRatingApiClient ratingApiClient = Refit.RestService.For<IRatingApiClient>(ratingApiUrl);
+            IMatchesApiClient matchApiClient = Refit.RestService.For<IMatchesApiClient>(matchesApiUrl);
+            IPlayersApiClient playerApiClient = Refit.RestService.For<IPlayersApiClient>(playersApiUrl);
+            IRatingApiClient ratingApiClient = Refit.RestService.For<IRatingApiClient>(ratingApiUrl);
 
-            //builder.RegisterInstance(matchApiClient).As<Clients.IMatchApiClient>();
-            //builder.RegisterInstance(playerApiClient).As<Clients.IPlayerApiClient>();
-            //builder.RegisterInstance(ratingApiClient).As<Clients.IRatingApiClient>();
+            builder.RegisterInstance(matchApiClient).As<IMatchesApiClient>();
+            builder.RegisterInstance(playerApiClient).As<IPlayersApiClient>();
+            builder.RegisterInstance(ratingApiClient).As<IRatingApiClient>();
 
             builder.Populate(services);
 

@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace RankingApiGateway.Models
 {
-    public class Match
+    public class MatchModel
     {
-        public Guid Id { get; set; }
-        public Guid WinnerId { get; set; }
+        public string Id { get; set; }
+        public string WinnerId { get; set; }
         public string Winner { get; set; }
-        public Guid LoserId { get; set; }
+        public string LoserId { get; set; }
         public string Loser { get; set; }
         public string Score { get; set; }
     }

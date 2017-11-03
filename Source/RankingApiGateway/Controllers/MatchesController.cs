@@ -19,26 +19,26 @@ namespace RankingApiGateway.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Match> GetAllMatches()
+        public async Task<IEnumerable<MatchModel>> GetAllMatches()
         {
-            return matchService.GetAllMatches();
+            return await matchService.GetAllMatches();
         }
 
         [HttpGet("{id}")]
-        public Match Get(Guid id)
+        public async Task<MatchModel> Get(string id)
         {
-            return matchService.GetMatchById(id);
+            return await matchService.GetMatchById(id);
         }
         
         [HttpPost]
-        public Match CreatePlayer([FromBody]CreateMatchCommand command)
+        public async Task<MatchModel> CreatePlayer([FromBody]CreateMatchCommand command)
         {
             if(command == null)
             {
                 throw new ArgumentException(nameof(command));
             }
 
-            return matchService.CreateMatch(command);
+            return await matchService.CreateMatch(command);
         }
     }
 }

@@ -19,26 +19,26 @@ namespace RankingApiGateway.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Player> GetAllPlayers()
+        public async Task<IEnumerable<PlayerModel>> GetAllPlayers()
         {
-            return playerService.GetAllPlayers();
+            return await playerService.GetAllPlayers();
         }
 
         [HttpGet("{id}")]
-        public Player GetPlayerById(Guid id)
+        public async Task<PlayerModel> GetPlayerById(Guid id)
         {
-            return playerService.GetPlayerById(id);
+            return await playerService.GetPlayerById(id);
         }
         
         [HttpPost]
-        public Player CreatePlayer([FromBody]CreatePlayerCommand command)
+        public async Task<PlayerModel> CreatePlayer([FromBody]CreatePlayerCommand command)
         {
             if(command == null)
             {
                 throw new ArgumentException(nameof(command));
             }
 
-            return playerService.CreatePlayer(command);
+            return await playerService.CreatePlayer(command);
         }
     }
 }

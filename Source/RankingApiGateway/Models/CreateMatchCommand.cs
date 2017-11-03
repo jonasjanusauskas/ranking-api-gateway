@@ -7,8 +7,8 @@ namespace RankingApiGateway.Models
 {
     public class CreateMatchCommand
     {
-        public Guid WinnerId { get; set; }
-        public Guid LoserId { get; set; }
+        public string WinnerId { get; set; }
+        public string LoserId { get; set; }
         public string Score { get; set; }
     }
 }
