@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  rankingapigateway:
+    image: rankingapigateway
+    build:
+      context: ./RankingApiGateway
+      dockerfile: Dockerfile
