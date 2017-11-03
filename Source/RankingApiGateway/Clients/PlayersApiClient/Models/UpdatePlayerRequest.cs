@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace RankingApiGateway.Clients.PlayersApiClient.Models
 {
-    public class Player
+    public class UpdatePlayerRequest
     {
-        [JsonProperty("id")]
-        public string Id { get; set; }
+        public UpdatePlayerRequest(string name, decimal rating, decimal deviation, decimal volatility)
+        {
+            Name = name;
+            Rating = rating;
+            Deviation = deviation;
+            Volatility = volatility;
+        }
+
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("rating")]

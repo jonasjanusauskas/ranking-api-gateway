@@ -14,7 +14,7 @@ namespace RankingApiGateway.Services
     public interface IPlayersService
     {
         Task<IReadOnlyCollection<PlayerModel>> GetAllPlayers();
-        Task<PlayerModel> GetPlayerById(Guid id);
+        Task<PlayerModel> GetPlayerById(string id);
         Task<PlayerModel> CreatePlayer(CreatePlayerCommand command);
     }
 
@@ -40,8 +40,9 @@ namespace RankingApiGateway.Services
             return PlayerMapper.Map(players);
         }
 
-        public async Task<PlayerModel> GetPlayerById(Guid id)
+        public async Task<PlayerModel> GetPlayerById(string id)
         {
+            Player player = await playersApiClient.GetPlayer(id);
             return PlayerMapper.Map(players.FirstOrDefault());
         }
 
@@ -49,14 +50,9 @@ namespace RankingApiGateway.Services
         {
             var rating = await ratingApiClient.GetDefaultPlayerRating();
 
-            Player player = new Player
-            {
-                Name = command.Name
-            };
+            CreatePlayerRequest createPlayerRequest = new CreatePlayerRequest(command.Name, rating.Rating, rating.Deviation, rating.Volatility);
 
-            player.UpdateRating(rating.Rating, rating.Deviation, rating.Volatility);
-
-            Player createdPlayer = await playersApiClient.CreatePlayer(player);
+            Player createdPlayer = await playersApiClient.CreatePlayer(createPlayerRequest);
 
             return PlayerMapper.Map(createdPlayer);
         }

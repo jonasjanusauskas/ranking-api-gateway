@@ -25,7 +25,7 @@ namespace RankingApiGateway.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<PlayerModel> GetPlayerById(Guid id)
+        public async Task<PlayerModel> GetPlayerById(string id)
         {
             return await playerService.GetPlayerById(id);
         }

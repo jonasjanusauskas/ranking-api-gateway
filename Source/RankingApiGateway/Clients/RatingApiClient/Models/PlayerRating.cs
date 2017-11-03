@@ -9,10 +9,10 @@ namespace RankingApiGateway.Clients.RatingApiClient.Models
     public class PlayerRating
     {
         [JsonProperty("rating")]
-        public int Rating { get; set; }
+        public decimal Rating { get; set; }
         [JsonProperty("deviation")]
-        public double Deviation { get; set; }
+        public decimal Deviation { get; set; }
         [JsonProperty("volatility")]
-        public double Volatility { get; set; }
+        public decimal Volatility { get; set; }
     }
 }

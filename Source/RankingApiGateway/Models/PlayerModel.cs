@@ -9,8 +9,8 @@ namespace RankingApiGateway.Models
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public int Rating { get; set; }
-        public double Deviation { get; set; }
-        public double Volatility { get; set; }
+        public decimal Rating { get; set; }
+        public decimal Deviation { get; set; }
+        public decimal Volatility { get; set; }
     }
 }

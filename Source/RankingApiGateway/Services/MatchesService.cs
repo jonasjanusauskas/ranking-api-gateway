@@ -65,25 +65,19 @@ namespace RankingApiGateway.Services
 
         public async Task<MatchModel> CreateMatch(CreateMatchCommand command)
         {
-            Player loser = await playersApiClient.GetPlayer(command.LoserId);
             Player winner = await playersApiClient.GetPlayer(command.WinnerId);
+            Player loser = await playersApiClient.GetPlayer(command.LoserId);            
 
             var ratings = await ratingApiClient.CalculatePlayersRatings(RatingMapper.Map(winner, loser));
 
-            winner.UpdateRating(ratings.WinnerRating.Rating, ratings.WinnerRating.Deviation, ratings.WinnerRating.Volatility);
-            await playersApiClient.UpdatePlayer(winner.Id, winner);
+            UpdatePlayerRequest updateWinnerRequest = new UpdatePlayerRequest(winner.Name, ratings.WinnerRating.Rating, ratings.WinnerRating.Deviation, ratings.WinnerRating.Volatility);
+            await playersApiClient.UpdatePlayer(winner.Id, updateWinnerRequest);
 
-            loser.UpdateRating(ratings.LoserRating.Rating, ratings.LoserRating.Deviation, ratings.LoserRating.Volatility);
-            await playersApiClient.UpdatePlayer(loser.Id, loser);
+            UpdatePlayerRequest updateLoserRequest = new UpdatePlayerRequest(loser.Name, ratings.LoserRating.Rating, ratings.LoserRating.Deviation, ratings.LoserRating.Volatility);
+            await playersApiClient.UpdatePlayer(loser.Id, updateLoserRequest);
 
-            await matchesApiClient.CreateMatch(command);
-
-            var match = new Match
-            {
-                Id = Guid.NewGuid().ToString(),
-                LoserId = Guid.NewGuid().ToString(),
-                WinnerId = Guid.NewGuid().ToString()
-            };
+            CreateMatchRequest createMatchRequest = new CreateMatchRequest(command.WinnerId, command.LoserId, command.Score);
+            Match match = await matchesApiClient.CreateMatch(createMatchRequest);
 
             return MatchMapper.Map(match, new List<Player> { loser, winner });
         }

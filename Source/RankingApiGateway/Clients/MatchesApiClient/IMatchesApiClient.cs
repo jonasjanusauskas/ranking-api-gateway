@@ -16,6 +16,6 @@ namespace RankingApiGateway.Clients.MatchesApiClient
         Task<Match> GetMatch([AliasAs("id")] string id);
 
         [Post("/matches")]
-        Task<Match> CreateMatch(object match);        
+        Task<Match> CreateMatch(CreateMatchRequest match);        
     }
 }

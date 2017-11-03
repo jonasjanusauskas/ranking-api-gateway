@@ -16,9 +16,9 @@ namespace RankingApiGateway.Clients.PlayersApiClient
         Task<Player> GetPlayer([AliasAs("id")] string id);
 
         [Post("/players")]
-        Task<Player> CreatePlayer(Player player);
+        Task<Player> CreatePlayer(CreatePlayerRequest request);
 
         [Put("/players/{id}")]
-        Task<Player> UpdatePlayer([AliasAs("id")] string id, Player player);
+        Task<Player> UpdatePlayer([AliasAs("id")] string id, UpdatePlayerRequest request);
     }
 }
