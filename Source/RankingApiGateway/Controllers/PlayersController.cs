@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RankingApiGateway.Models;
 using RankingApiGateway.Services;
+using System.Net;
 
 namespace RankingApiGateway.Controllers
 {
@@ -19,9 +20,17 @@ namespace RankingApiGateway.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<PlayerModel>> GetAllPlayers()
+        public async Task<IActionResult> GetAllPlayers()
         {
-            return await playerService.GetAllPlayers();
+            try
+            {
+                return Ok(await playerService.GetAllPlayers());
+            }
+
+            catch(Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, e);
+            }
         }
 
         [HttpGet("{id}")]

@@ -47,6 +47,7 @@ namespace RankingApiGateway
             
             builder.RegisterType<PlayersService>().As<IPlayersService>();
             builder.RegisterType<MatchesService>().As<IMatchesService>();
+            builder.RegisterType<ScoreboardService>().As<IScoreboardService>();
 
             IMatchesApiClient matchApiClient = Refit.RestService.For<IMatchesApiClient>(matchesApiUrl);
             IPlayersApiClient playerApiClient = Refit.RestService.For<IPlayersApiClient>(playersApiUrl);

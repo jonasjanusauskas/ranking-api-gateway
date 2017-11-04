@@ -15,6 +15,9 @@ namespace RankingApiGateway.Clients.MatchesApiClient
         [Get("/api/matches/{id}")]
         Task<Match> GetMatch([AliasAs("id")] string id);
 
+        [Get("/api/matches/allPlayerMatches/{playerId}")]
+        Task<List<Match>> GetPlayerMatches([AliasAs("playerId")] string playerId);
+
         [Post("/api/matches")]
         Task<Match> CreateMatch(CreateMatchRequest match);        
     }
