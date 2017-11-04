@@ -9,13 +9,13 @@ namespace RankingApiGateway.Clients.MatchesApiClient
 {
     public interface IMatchesApiClient
     {
-        [Get("/matches")]
+        [Get("/api/matches")]
         Task<List<Match>> GetAllMatches();
 
-        [Get("/matches/{id}")]
+        [Get("/api/matches/{id}")]
         Task<Match> GetMatch([AliasAs("id")] string id);
 
-        [Post("/matches")]
+        [Post("/api/matches")]
         Task<Match> CreateMatch(CreateMatchRequest match);        
     }
 }

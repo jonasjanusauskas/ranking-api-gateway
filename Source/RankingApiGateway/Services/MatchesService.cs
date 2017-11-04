@@ -1,9 +1,9 @@
-﻿using RankingApiGateway.Clients;
-using RankingApiGateway.Clients.MatchesApiClient;
+﻿using RankingApiGateway.Clients.MatchesApiClient;
 using RankingApiGateway.Clients.MatchesApiClient.Models;
 using RankingApiGateway.Clients.PlayersApiClient;
 using RankingApiGateway.Clients.PlayersApiClient.Models;
 using RankingApiGateway.Clients.RatingApiClient;
+using RankingApiGateway.Clients.RatingApiClient.Models;
 using RankingApiGateway.Mappers;
 using RankingApiGateway.Models;
 using System;
@@ -22,20 +22,6 @@ namespace RankingApiGateway.Services
 
     public class MatchesService : IMatchesService
     {
-        IReadOnlyCollection<Match> matches = new List<Match>
-        {
-            new Match {
-                Id = Guid.NewGuid().ToString(),
-                LoserId = Guid.NewGuid().ToString(),
-                WinnerId = Guid.NewGuid().ToString()
-            },
-            new Match{
-                Id = Guid.NewGuid().ToString(),
-                LoserId = Guid.NewGuid().ToString(),
-                WinnerId = Guid.NewGuid().ToString()
-            },
-        };
-
         private readonly IPlayersApiClient playersApiClient;
         private readonly IMatchesApiClient matchesApiClient;
         private readonly IRatingApiClient ratingApiClient;
@@ -50,14 +36,14 @@ namespace RankingApiGateway.Services
         public async Task<IReadOnlyCollection<MatchModel>> GetAllMatches()
         {
             var players = await playersApiClient.GetAllPlayers();
-            //var matches = await matchesApiClient.GetAllMatches();
+            var matches = await matchesApiClient.GetAllMatches();
+
             return MatchMapper.Map(matches, players);
         }
 
         public async Task<MatchModel> GetMatchById(string id)
         {
-            //var match = await matchesApiClient.GetMatch(id);
-            var match = matches.FirstOrDefault(); 
+            var match = await matchesApiClient.GetMatch(id);
 
             Player loser = await playersApiClient.GetPlayer(match.LoserId);
             Player winner = await playersApiClient.GetPlayer(match.WinnerId);
@@ -68,20 +54,20 @@ namespace RankingApiGateway.Services
         public async Task<MatchModel> CreateMatch(CreateMatchCommand command)
         {
             Player winner = await playersApiClient.GetPlayer(command.WinnerId);
-            Player loser = await playersApiClient.GetPlayer(command.LoserId);            
+            Player loser = await playersApiClient.GetPlayer(command.LoserId);
 
-            var ratings = await ratingApiClient.CalculatePlayersRatings(RatingMapper.Map(winner, loser));
+            PlayersRatings ratings = await ratingApiClient.CalculatePlayersRatings(RatingMapper.Map(winner, loser));
 
-            UpdatePlayerRequest updateWinnerRequest = new UpdatePlayerRequest(winner.Name, ratings.WinnerRating.Rating, ratings.WinnerRating.Deviation, ratings.WinnerRating.Volatility);
-            await playersApiClient.UpdatePlayer(winner.Id, updateWinnerRequest);
+            UpdatePlayerRequest updateWinnerRequest = new UpdatePlayerRequest(winner.Id, winner.Name, ratings.WinnerRating.Rating, ratings.WinnerRating.Deviation, ratings.WinnerRating.Volatility);
+            winner = await playersApiClient.UpdatePlayer(updateWinnerRequest);
 
-            UpdatePlayerRequest updateLoserRequest = new UpdatePlayerRequest(loser.Name, ratings.LoserRating.Rating, ratings.LoserRating.Deviation, ratings.LoserRating.Volatility);
-            await playersApiClient.UpdatePlayer(loser.Id, updateLoserRequest);
+            UpdatePlayerRequest updateLoserRequest = new UpdatePlayerRequest(loser.Id, loser.Name, ratings.LoserRating.Rating, ratings.LoserRating.Deviation, ratings.LoserRating.Volatility);
+            loser = await playersApiClient.UpdatePlayer(updateLoserRequest);
 
-            CreateMatchRequest createMatchRequest = new CreateMatchRequest(command.WinnerId, command.LoserId, command.Score);
+            CreateMatchRequest createMatchRequest = new CreateMatchRequest(winner.Id, loser.Id, command.Score);
             Match match = await matchesApiClient.CreateMatch(createMatchRequest);
 
-            return MatchMapper.Map(match, new List<Player> { loser, winner });
+            return MatchMapper.Map(match, new List<Player> { winner, loser });
         }
     }
 }

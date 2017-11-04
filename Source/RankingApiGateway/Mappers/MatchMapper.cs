@@ -24,8 +24,8 @@ namespace RankingApiGateway.Mappers
                 LoserId = match.LoserId,
                 Score = match.Score,
 
-                Winner = players.FirstOrDefault(x => x.Id == match.WinnerId)?.Name,
-                Loser = players.FirstOrDefault(x => x.Id == match.LoserId)?.Name
+                Winner = players?.FirstOrDefault(x => x?.Id == match.WinnerId)?.Name,
+                Loser = players?.FirstOrDefault(x => x?.Id == match.LoserId)?.Name
             };
         }
     }

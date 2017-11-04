@@ -36,6 +36,13 @@ namespace RankingApiGateway
 
             services.AddMvc();
 
+            services.AddCors(o => o.AddPolicy("AllowAll", corsBuilder =>
+            {
+                corsBuilder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             var builder = new ContainerBuilder(); 
             
             builder.RegisterType<PlayersService>().As<IPlayersService>();

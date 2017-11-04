@@ -9,16 +9,16 @@ namespace RankingApiGateway.Clients.PlayersApiClient
 {
     public interface IPlayersApiClient
     {
-        [Get("/players")]
+        [Get("/api/players")]
         Task<IReadOnlyCollection<Player>> GetAllPlayers();
 
-        [Get("/players/{id}")]
+        [Get("/api/players/{id}")]
         Task<Player> GetPlayer([AliasAs("id")] string id);
 
-        [Post("/players")]
+        [Post("/api/players")]
         Task<Player> CreatePlayer(CreatePlayerRequest request);
 
-        [Put("/players/{id}")]
-        Task<Player> UpdatePlayer([AliasAs("id")] string id, UpdatePlayerRequest request);
+        [Put("/api/players")]
+        Task<Player> UpdatePlayer(UpdatePlayerRequest request);
     }
 }

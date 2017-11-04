@@ -16,10 +16,10 @@ namespace RankingApiGateway.Clients.MatchesApiClient.Models
         }
 
         [JsonProperty("winnerId")]
-        public string WinnerId { get; set; }
+        public string WinnerId { get; }
         [JsonProperty("loserId")]
-        public string LoserId { get; set; }
+        public string LoserId { get; }
         [JsonProperty("score")]
-        public string Score { get; set; }
+        public string Score { get; }
     }
 }

@@ -20,12 +20,6 @@ namespace RankingApiGateway.Services
 
     public class PlayersService : IPlayersService
     {
-        IReadOnlyCollection<Player> players = new List<Player>
-        {
-            new Player{ Id = Guid.NewGuid().ToString(), Name = "Player 1", Rating = 1 },
-            new Player{ Id = Guid.NewGuid().ToString(), Name = "Player 2", Rating = 2 },
-        };
-
         private readonly IPlayersApiClient playersApiClient;
         private readonly IRatingApiClient ratingApiClient;
 
@@ -37,14 +31,14 @@ namespace RankingApiGateway.Services
 
         public async Task<IReadOnlyCollection<PlayerModel>> GetAllPlayers()
         {
-            //var players = await playersApiClient.GetAllPlayers();
+            var players = await playersApiClient.GetAllPlayers();
             return PlayerMapper.Map(players);
         }
 
         public async Task<PlayerModel> GetPlayerById(string id)
-        {
+        {   
             Player player = await playersApiClient.GetPlayer(id);
-            return PlayerMapper.Map(players.FirstOrDefault());
+            return PlayerMapper.Map(player);
         }
 
         public async Task<PlayerModel> CreatePlayer(CreatePlayerCommand command)

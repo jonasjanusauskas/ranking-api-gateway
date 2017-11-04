@@ -25,13 +25,13 @@ namespace RankingApiGateway.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<MatchModel> Get(string id)
+        public async Task<MatchModel> GetMatchById(string id)
         {
             return await matchService.GetMatchById(id);
         }
         
         [HttpPost]
-        public async Task<MatchModel> CreatePlayer([FromBody]CreateMatchCommand command)
+        public async Task<MatchModel> CreateMatch([FromBody]CreateMatchCommand command)
         {
             if(command == null)
             {
