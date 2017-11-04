@@ -50,12 +50,14 @@ namespace RankingApiGateway.Services
         public async Task<IReadOnlyCollection<MatchModel>> GetAllMatches()
         {
             var players = await playersApiClient.GetAllPlayers();
+            //var matches = await matchesApiClient.GetAllMatches();
             return MatchMapper.Map(matches, players);
         }
 
         public async Task<MatchModel> GetMatchById(string id)
         {
-            var match = matches.FirstOrDefault();
+            //var match = await matchesApiClient.GetMatch(id);
+            var match = matches.FirstOrDefault(); 
 
             Player loser = await playersApiClient.GetPlayer(match.LoserId);
             Player winner = await playersApiClient.GetPlayer(match.WinnerId);

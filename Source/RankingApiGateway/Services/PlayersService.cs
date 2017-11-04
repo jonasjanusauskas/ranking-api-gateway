@@ -37,6 +37,7 @@ namespace RankingApiGateway.Services
 
         public async Task<IReadOnlyCollection<PlayerModel>> GetAllPlayers()
         {
+            //var players = await playersApiClient.GetAllPlayers();
             return PlayerMapper.Map(players);
         }
 
