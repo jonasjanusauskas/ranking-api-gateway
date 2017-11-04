@@ -33,15 +33,15 @@ namespace RankingApiGateway
             string playersApiUrl = $"http://{Environment.GetEnvironmentVariable("POOLRANKING_PLAYERS_SERVICE_HOST")}:{Environment.GetEnvironmentVariable("POOLRANKING_PLAYERS_SERVICE_PORT")}";
             string matchesApiUrl = $"http://{Environment.GetEnvironmentVariable("POOLRANKING_MATCHES_SERVICE_HOST")}:{Environment.GetEnvironmentVariable("POOLRANKING_MATCHES_SERVICE_PORT")}"; ;
             string ratingApiUrl = $"http://{Environment.GetEnvironmentVariable("POOLRANKING_RANKING_SERVICE_HOST")}:{Environment.GetEnvironmentVariable("POOLRANKING_RANKING_SERVICE_PORT")}"; ;
-
-            services.AddMvc();
-
+            
             services.AddCors(o => o.AddPolicy("AllowAll", corsBuilder =>
             {
                 corsBuilder.AllowAnyOrigin()
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+
+            services.AddMvc();
 
             var builder = new ContainerBuilder(); 
             
@@ -71,6 +71,8 @@ namespace RankingApiGateway
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("AllowAll");
 
             app.UseMvc();
         }
