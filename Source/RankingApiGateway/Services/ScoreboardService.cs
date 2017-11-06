@@ -39,8 +39,8 @@ namespace RankingApiGateway.Services
                     PlayerId = player.Id,
                     PlayerName = player.Name,
                     Rating = player.Rating,
-                    Wins = matches?.Where(x => x.WinnerId == player.Id).Count() ?? 0,
-                    Losses = matches?.Where(x => x.LoserId == player.Id).Count() ?? 0,
+                    Wins = matches?.Where(x => x.WinnerId == player.Id)?.Count() ?? 0,
+                    Losses = matches?.Where(x => x.LoserId == player.Id)?.Count() ?? 0,
                 });
             }
 
